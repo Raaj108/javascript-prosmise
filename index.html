@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+
+  <title>Minimum Bootstrap HTML Skeleton</title>
+  <!--  -->
+  <style>
+    .container{
+      padding-top: 20px;
+    }
+    
+    #imgContainer {
+      width: 400px;
+      height: 600px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div id="imgContainer" class="panel panel-default addroundridge">
+    </div>
+    <button type="button" id="load" class="btn btn-success">Load Image</button>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+  <script>
+    const loadImage = (url) => {
+      let promise1 = new Promise((resolve, reject) => {
+        let xhr;
+
+        if (window.XMLHttpRequest) {
+          // code for modern browsers
+          xhr = new XMLHttpRequest();
+        } else {
+          // code for old IE browsers
+          xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            resolve(xhr.response);
+          } else {
+            reject(Error('Image didn\'t load successfully; error code:' + xhr.statusText));
+          }
+        }
+
+        xhr.onerror = () => {
+          reject(Error('There was a network error.'));
+        }
+
+        xhr.send();
+
+      });
+
+      return promise1;
+    }
+
+
+    let imageContainer = document.getElementById('imgContainer');
+    var image = new Image();
+
+    document.getElementById("load").addEventListener('click', () => {
+      loadImage('image.jpg').then((response) => {
+        let imageURL = window.URL.createObjectURL(response);
+        image.src = imageURL;
+        image.classList.add('img-responsive');
+        imageContainer.appendChild(image);
+      }, (error) => {
+        alert(error);
+      })
+    })
+  </script>
+</body>
+
+</html>
